@@ -21,7 +21,17 @@ class BlogHandler(webapp2.RequestHandler):
         """
 
         # TODO - filter the query so that only posts by the given user
-        return None
+
+        query = Post.all().filter("author", user).order('-created')
+        return query.fetch(limit = limit, offset=offset)
+
+        # query = Movie.all().filter("owner", self.user).filter("watched", True)
+        # watched_movies = query.run()
+        #
+        # t = jinja_env.get_template("ratings.html")
+        # content = t.render(movies = watched_movies)
+        # self.response.write(content)
+
 
     def get_user_by_name(self, username):
         """ Get a user object from the db, based on their username """
@@ -145,7 +155,7 @@ class NewPostHandler(BlogHandler):
             self.redirect("/blog/%s" % id)
         else:
             error = "we need both a title and a body!"
-            self.render_form(title, body, error)
+            self.render_form(title, body,error)
 
 class ViewPostHandler(BlogHandler):
 
